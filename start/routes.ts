@@ -14,3 +14,10 @@ router.get('/', async () => {
     hello: 'world',
   }
 })
+
+
+router.group(() => {
+  router.post('/auth/register', 'AuthController.register')
+}).prefix('/api')
+
+
