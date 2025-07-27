@@ -1,9 +1,10 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { registerValidator } from '#validators/register'
 import User from '#models/user'
-import { messages } from '@vinejs/vine/defaults'
+
 
 export default class AuthController {
+  
   async register({ request, response, auth }: HttpContext) {
     // Validasi input
  const data = await request.validateUsing(registerValidator)

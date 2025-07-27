@@ -15,6 +15,8 @@ import server from '@adonisjs/core/services/server'
  * The error handler is used to convert an exception
  * to an HTTP response.
  */
+
+
 server.errorHandler(() => import('#exceptions/handler'))
 
 /**
@@ -28,6 +30,8 @@ server.use([
   () => import('@adonisjs/cors/cors_middleware'),
 ])
 
+
+
 /**
  * The router middleware stack runs middleware on all the HTTP
  * requests with a registered route.
@@ -38,6 +42,9 @@ router.use([() => import('@adonisjs/core/bodyparser_middleware'), () => import('
  * Named middleware collection must be explicitly assigned to
  * the routes or the routes group.
  */
-export const middleware = router.named({
-  auth: () => import('#middleware/auth_middleware')
-})
+export const middleware = {
+  named: {
+    auth: () => import('#middleware/auth_middleware'),
+    
+  },
+}
