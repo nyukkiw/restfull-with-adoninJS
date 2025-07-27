@@ -8,6 +8,9 @@
 */
 
 import router from '@adonisjs/core/services/router'
+import AuthController from '#controllers/auth_controller'
+
+const authController = new AuthController()
 
 router.get('/', async () => {
   return {
@@ -17,7 +20,7 @@ router.get('/', async () => {
 
 
 router.group(() => {
-  router.post('/auth/register', 'AuthController.register')
+  router.post('/auth/register', (data) => authController.register(data))
+  router.post('/auth/login',(data) => authController.login(data))
 }).prefix('/api')
-
 

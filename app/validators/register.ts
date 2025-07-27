@@ -1,7 +1,7 @@
 import vine from '@vinejs/vine'
 
 const registerSchema = vine.object({
-  name: vine.string().trim(),
+  fullName: vine.string().trim(),
 
   email: vine
     .string()
