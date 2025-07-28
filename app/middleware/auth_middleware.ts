@@ -12,16 +12,16 @@ export default class AuthMiddleware {
       guards?: (keyof Authenticators)[]
     } = {}
   ) {
-    console.log('🔐 Masuk ke middleware auth')
+    
 
     try {
       await ctx.auth.authenticateUsing(options.guards, {
         loginRoute: this.redirectTo,
       })
-      console.log('✅ Auth sukses')
+      
       await next()
     } catch (error) {
-      console.error('❌ Auth gagal:', error.message)
+    
 
       return ctx.response.status(401).json({
         message: 'Unauthorized: ' + error.message,
