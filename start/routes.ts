@@ -24,11 +24,15 @@ router.get('/', async () => {
 
 
 router.group(() => {
-   console.log('✅ GROUP /api ROUTES LOADED');
+  
   router.post('/auth/register', (data) => authController.register(data))
   router.post('/auth/login',(data) => authController.login(data))
+
+  router.get('/threads', threadsController.index)
   router.post('/threads', threadsController.store).use(middleware.auth())
-//sepertinya ada masalaha di middlewarenya 
+  router.get('/threads/:id', threadsController.show)
+  router.put('/threads/:id', threadsController.update).use(middleware.auth())
+  router.delete('/threads/:id', threadsController.destroy).use(middleware.auth())
 
 }).prefix('/api')
 
