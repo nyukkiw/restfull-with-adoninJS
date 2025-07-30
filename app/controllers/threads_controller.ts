@@ -7,7 +7,7 @@ export default class ThreadsController {
 
     async index({ response }: HttpContext){
       try {
-        const threads = await Thread.query().preload('category').preload('user')
+        const threads = await Thread.query().preload('category').preload('user').preload('replies')
         return response.status(200).json({
           data: threads
         })  
@@ -21,9 +21,7 @@ export default class ThreadsController {
 
 
     async store({request, response, auth}: HttpContext){
-        console.log('masuk thread store controller')
-      
-
+       
         const validateData = await request.validateUsing(threadValidator)
         try {
           const thread = await auth.user?.related('threads').create(validateData)
@@ -50,6 +48,7 @@ export default class ThreadsController {
         .where('id', params.id)
         .preload('category')
         .preload('user')
+        .preload('replies')
         .firstOrFail()
         return response.status(200).json({
           data: thread
