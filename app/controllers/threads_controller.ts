@@ -1,13 +1,29 @@
 import Thread from '#models/thread'
+import { sortThreadValidator } from '#validators/sort_thread'
 import { threadValidator } from '#validators/thread'
 import type { HttpContext } from '@adonisjs/core/http'
-import { messages } from '@vinejs/vine/defaults'
 
 export default class ThreadsController {
 
-    async index({ response }: HttpContext){
+    async index({ request, response }: HttpContext){
       try {
-        const threads = await Thread.query().preload('category').preload('user').preload('replies')
+        const page = request.input('page', 1)
+        const perPage = request.input('per_page',10)
+        const userId = request.input('user_id')
+        const categoryId = request.input('category_id')
+        const  sortValidated = await request.validateUsing(sortThreadValidator)
+        const sortBy = sortValidated.sort_by || 'id'
+        const order = sortValidated.order || 'asc'
+        
+        const threads = await Thread.query()
+        .if(userId, (query) => query.where('user_id', userId))
+        .if(categoryId, (query) => query.where('category_id', categoryId))
+        .orderBy(sortBy, order)
+        .preload('category')
+        .preload('user')
+        .preload('replies')
+        .paginate(page, perPage)
+
         return response.status(200).json({
           data: threads
         })  
