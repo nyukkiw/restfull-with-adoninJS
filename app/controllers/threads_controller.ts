@@ -1,7 +1,9 @@
+import UnauthorizedException from '#exceptions/unauthorized_exception'
 import Thread from '#models/thread'
 import { sortThreadValidator } from '#validators/sort_thread'
 import { threadValidator } from '#validators/thread'
 import type { HttpContext } from '@adonisjs/core/http'
+import { messages } from '@vinejs/vine/defaults'
 
 export default class ThreadsController {
 
@@ -84,9 +86,10 @@ export default class ThreadsController {
         const thread = await Thread.findOrFail(params.id)
 
         if(user?.id !== thread.userId){
-          return response.status(401).json({
-            message: 'Unauthorized'
-          })
+         throw new UnauthorizedException('Unauthorized', { status: 403 })
+          // return response.status(401).json({
+          //   message: 'Unauthorized'
+          // })
         }
 
         const validateData = await request.validateUsing(threadValidator)
@@ -98,9 +101,17 @@ export default class ThreadsController {
           data: thread
         })
       } catch (error) {
-        return response.status(400).json({
-          message: error
-        })
+        if(error.name === 'UnauthorizedException'){
+          return response.status(error.status).json({
+            message: error.message
+          })
+        }else{
+          return response.status(404).json({
+            message: 'Thread not found'
+          })
+        }
+       
+       
       }
     }
     
@@ -122,9 +133,16 @@ export default class ThreadsController {
           message: 'Thread deleted successfully'
         })
       } catch (error) {
-        return response.status(500).json({
-          message: error
-        })
+        if(error.name === 'UnauthorizedException'){
+          return response.status(error.status).json({
+            message: error.message
+          })
+        }else{
+          return response.status(404).json({
+            message: 'Thread not found'
+          })
+        }
+       
       }
     }
 

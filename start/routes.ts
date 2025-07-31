@@ -36,6 +36,8 @@ router.group(() => {
   router.put('/threads/:id', threadsController.update).use(middleware.auth())
   router.delete('/threads/:id', threadsController.destroy).use(middleware.auth())
 
+    
+
   router.post('/threads/:thread_id/replies', repliesController.store).use(middleware.auth())
 }).prefix('/api')
 
